@@ -13,6 +13,12 @@ class CodingAgentViewProvider implements vscode.WebviewViewProvider {
 		private readonly _extensionUri: vscode.Uri
 	) {}
 
+	my_updateWebviewView() {
+		if (this._view) {
+			this._view.webview.html = this._getHtmlForWebView(this._view?.webview);
+		}
+	}
+
 	resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext<unknown>, token: vscode.CancellationToken): void | Thenable<void> {
 		//throw new Error('Method not implemented.');
 		this._view = webviewView;
@@ -28,7 +34,7 @@ class CodingAgentViewProvider implements vscode.WebviewViewProvider {
 
 	}
 
-	private _getHtmlForWebView(webview : vscode.Webview) {
+	private _getHtmlForWebView(webview : vscode.Webview | undefined) {
 		return `
 		<html lang="en">
 		  <head>
@@ -43,15 +49,40 @@ class CodingAgentViewProvider implements vscode.WebviewViewProvider {
 			</style>
 		  </head>
 		  <body>
+			<p>Base URL: ${vscode.workspace.getConfiguration('juniordev').get('conf.provider.openai.baseUrl')}</p>
 			<input id="input" type="text">
 			<button onclick="handleClick()">Click me!</button>
 			<div id="output"></div>
 			<script>
+			  const apiUrl = "${vscode.workspace.getConfiguration('juniordev').get('conf.provider.openai.baseUrl')}" + "/v1/chat/completions";
 			  function handleClick() {
 				const input = document.querySelector('#input');
 				const output = document.querySelector('#output');
 				const text = input.value;
 				output.innerText = "You clicked a button!" + text;
+
+				const reqBody = {
+					model: 'mistral-7b-instruct',
+					messages: [{
+						role: 'system',
+						content: 'You are a senior software engineer. You are passionate about technology and are willing to help the user, who is your colleague.'
+					},
+					{
+						role: 'user',
+						content: text
+					}],
+					max_tokens: 2048,
+					stream: false
+				}
+				const opt = {
+					method: 'POST',
+					headers: {Authorization: 'Bearer ' + '${vscode.workspace.getConfiguration('juniordev').get('conf.provider.accessToken')}', 'Content-Type': 'application/json'},
+					body: JSON.stringify(reqBody)
+				}
+				fetch(apiUrl, opt)
+				  .then(response => response.json())
+				  .then(response => { console.log(response); output.innerText = response.choices[0].message.content; })
+				  .catch(err => console.error(err))
 			  }
 			</script>
 		  </body>
@@ -83,6 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.workspace.workspaceFolders?.[0].name)
 		//vscode.window.showInformationMessage('BaseURL: ')
 		console.log(vscode.workspace.getConfiguration('juniordev').get('conf.provider.openai.baseUrl'));
+		provider.my_updateWebviewView();
 	});
 
 	context.subscriptions.push(disposable);
