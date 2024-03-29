@@ -21,8 +21,15 @@
         "title": "Hello World"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [{
+        "id": "my-coding-agent",
+        "title": "LLM Coding Agent",
+        "icon": "media/icons8-brave-ai-50.png"
+      }]
+    },
     "views": {
-      "explorer": [
+      "my-coding-agent": [
         {
           "type": "webview",
           "id": "juniordev.codingAgentSidePanel",
