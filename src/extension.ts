@@ -32,6 +32,16 @@ class CodingAgentViewProvider implements vscode.WebviewViewProvider {
 
 		webviewView.webview.html = this._getHtmlForWebView(webviewView.webview);
 
+		webviewView.webview.onDidReceiveMessage(data => {
+			switch (data.type) {
+				case 'startAgent':
+					vscode.window.activeTextEditor?.insertSnippet(new vscode.SnippetString(`Pasted: ${data.value}`))
+					vscode.window.activeTerminal?.sendText('python3 -m venv venv; source venv/bin/activate', true);
+					break;
+				default:
+					vscode.window.showInformationMessage('unknown')
+			}
+		})
 	}
 
 	private _getHtmlForWebView(webview : vscode.Webview | undefined) {
@@ -52,8 +62,10 @@ class CodingAgentViewProvider implements vscode.WebviewViewProvider {
 			<p>Base URL: ${vscode.workspace.getConfiguration('juniordev').get('conf.provider.openai.baseUrl')}</p>
 			<input id="input" type="text">
 			<button onclick="handleClick()">Click me!</button>
+			<button onClick="sendToExtension()">Send to Extension</button>
 			<div id="output"></div>
 			<script>
+			  const vscode = acquireVsCodeApi();
 			  const apiUrl = "${vscode.workspace.getConfiguration('juniordev').get('conf.provider.openai.baseUrl')}" + "/v1/chat/completions";
 			  function handleClick() {
 				const input = document.querySelector('#input');
@@ -83,6 +95,12 @@ class CodingAgentViewProvider implements vscode.WebviewViewProvider {
 				  .then(response => response.json())
 				  .then(response => { console.log(response); output.innerText = response.choices[0].message.content; })
 				  .catch(err => console.error(err))
+			  }
+
+			  function sendToExtension() {
+				const input = document.querySelector('#input');
+
+				vscode.postMessage({ type: 'startAgent', value: input.value })
 			  }
 			</script>
 		  </body>
