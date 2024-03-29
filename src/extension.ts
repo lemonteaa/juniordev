@@ -79,6 +79,10 @@ export function activate(context: vscode.ExtensionContext) {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from juniordev!');
+		vscode.window.showInformationMessage('Folder: ' +
+			vscode.workspace.workspaceFolders?.[0].name)
+		//vscode.window.showInformationMessage('BaseURL: ')
+		console.log(vscode.workspace.getConfiguration('juniordev').get('conf.provider.openai.baseUrl'));
 	});
 
 	context.subscriptions.push(disposable);

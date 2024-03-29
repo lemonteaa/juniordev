@@ -36,7 +36,20 @@
           "name": "LLM Coding Agent"
         }
       ]
-    }
+    },
+    "configuration": [{
+      "title": "JuniorDev",
+      "properties": {
+        "juniordev.conf.provider.openai.baseUrl": {
+          "type": "string",
+          "description": "Base URL for the OpenAI compatible LLM API endpoint."
+        },
+        "juniordev.conf.provider.accessToken": {
+          "type": "string",
+          "description": "Access Token for the API"
+        }
+      }
+    }]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
