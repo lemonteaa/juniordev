@@ -1,23 +1,12 @@
 import * as vscode from 'vscode';
 
-export namespace codeagent {
-    interface tree_data {
-        label: string,
-        children: tree_data[]
-    }
-    function build_tree(mytree : tree_data) : tree_item {
-        let main_node = new tree_item(mytree.label, vscode.TreeItemCollapsibleState.Expanded);
-        let child_nodes = [];
-        for (const c of mytree.children) {
-            let c_node = build_tree(c);
-            c_node.parent = main_node;
-            child_nodes.push(c_node)
-        }
-        main_node.children = child_nodes;
-        return main_node;
-    }
+import { root_tree_data } from './chains/testchain/main';
+import { build_tree } from './chains/datastruct';
 
-    class tree_item extends vscode.TreeItem
+export namespace codeagent {
+    
+
+    export class tree_item extends vscode.TreeItem
     {
         public children: tree_item[] | undefined;
         public parent: tree_item | undefined;
@@ -35,39 +24,8 @@ export namespace codeagent {
 
     export class tree_view implements vscode.TreeDataProvider<tree_item>
     {
-        root_tree_data : tree_data = {
-            label: "Main",
-            children: [
-                {
-                    label: "Theme Design",
-                    children: []
-                },
-                {
-                    label: "Design Site map",
-                    children: [
-                        {
-                            label: "Implement React Routes",
-                            children: []
-                        },
-                        {
-                            label: "Page layout impl loop",
-                            children: []
-                        },
-                        {
-                            label: "Design API",
-                            children: [
-                                {
-                                    label: "Generate Dataset",
-                                    children: []
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        };
 
-        root_tree = build_tree(this.root_tree_data);
+        root_tree = build_tree(root_tree_data);
 
         onDidChangeTreeData?: vscode.Event<void | tree_item | tree_item[] | null | undefined> | undefined;
         getTreeItem(element: tree_item): vscode.TreeItem | Thenable<vscode.TreeItem> {

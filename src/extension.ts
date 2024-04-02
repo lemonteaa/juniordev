@@ -8,6 +8,8 @@ import { codeagent } from './treeview';
 
 import { LLMProvider } from './llm/LLMProvider'
 
+import { root_tree_data } from './chains/testchain/main';
+
 async function showQuickPick() {
 	let i = 0;
 	const result = await vscode.window.showQuickPick(["Parcel", "create-react-app", "others..."], {
@@ -197,6 +199,10 @@ export function activate(context: vscode.ExtensionContext) {
 		//const quickPick = vscode.window.createQuickPick()
 		const r1 = await showQuickPick();
 		console.log(r1);
+	});
+
+	let disposable2 = vscode.commands.registerCommand('juniordev.agent.runchain', async () => {
+		//TODO
 	});
 
 	context.subscriptions.push(disposable);

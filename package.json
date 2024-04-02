@@ -19,6 +19,10 @@
       {
         "command": "juniordev.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "juniordev.agent.runchain",
+        "title": "Run Coding Agent"
       }
     ],
     "viewsContainers": {
