@@ -33,9 +33,14 @@
     "views": {
       "my-coding-agent": [
         {
+          "type": "tree",
+          "id": "juniordev.codingAgentMainControl",
+          "name": "LLM Coding Agent"
+        },
+        {
           "type": "webview",
           "id": "juniordev.codingAgentSidePanel",
-          "name": "LLM Coding Agent"
+          "name": "Chat with LLM"
         }
       ]
     },
