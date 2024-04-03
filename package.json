@@ -59,6 +59,10 @@
           "juniordev.conf.provider.accessToken": {
             "type": "string",
             "description": "Access Token for the API"
+          },
+          "juniordev.conf.provider.openai.model": {
+            "type": "string",
+            "description": "Model ID to call"
           }
         }
       }

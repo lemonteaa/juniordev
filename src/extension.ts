@@ -9,6 +9,7 @@ import { codeagent } from './treeview';
 import { LLMProvider } from './llm/LLMProvider'
 
 import { root_tree_data } from './chains/testchain/main';
+import { runChain } from './chains/datastruct';
 
 async function showQuickPick() {
 	let i = 0;
@@ -203,6 +204,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let disposable2 = vscode.commands.registerCommand('juniordev.agent.runchain', async () => {
 		//TODO
+		let mytree = root_tree_data;
+		const llm = new LLMProvider(extLogger);
+		const sample = "A public restaurant catalogue with reviews, menus, and some value added service.";
+		await runChain(mytree, { description: sample }, llm);
+
 	});
 
 	context.subscriptions.push(disposable);

@@ -24,6 +24,9 @@ export class LLMProvider {
 			this._logger.info(JSON.stringify(response));
 			})
 		  .catch(err => console.error(err))*/
+		
+		this._logger.info(JSON.stringify(reqBody));
+		
 		const result = await fetch(apiUrl, opt);
 		const j: any = await result.json();
 		this._logger.info(JSON.stringify(j));
